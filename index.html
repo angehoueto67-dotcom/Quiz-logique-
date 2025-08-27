@@ -1,1 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Logique</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-192.png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    #app {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+    button {
+      margin: 8px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #4CAF50;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>Quiz Logique 🤔</h1>
+    <p id="question"></p>
+    <div id="answers"></div>
+    <p id="feedback"></p>
+  </div>
 
+  <script>
+    const questions = [
+      { q: "Si Paul a 3 pommes et en mange 1, combien lui en reste-t-il ?", options: ["1","2","3"], answer: "2" },
+      { q: "Quel est le prochain nombre : 2, 4, 8, 16, ?", options: ["20","24","32"], answer: "32" },
+      { q: "Un triangle a combien de côtés ?", options: ["2","3","4"], answer: "3" },
+      { q: "Le contraire de Vrai est ?", options: ["Faux","Peut-être","Toujours"], answer: "Faux" }
+    ];
+
+    let current = 0;
+    const qEl = document.getElementById("question");
+    const ansEl = document.getElementById("answers");
+    const fbEl = document.getElementById("feedback");
+
+    function showQuestion() {
+      const q = questions[current];
+      qEl.textContent = q.q;
+      ansEl.innerHTML = "";
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(opt);
+        ansEl.appendChild(btn);
+      });
+      fbEl.textContent = "";
+    }
+
+    function checkAnswer(opt) {
+      if(opt === questions[current].answer) {
+        fbEl.textContent = "✅ Bonne réponse !";
+      } else {
+        fbEl.textContent = "❌ Mauvaise réponse.";
+      }
+      current = (current + 1) % questions.length;
+      setTimeout(showQuestion, 1000);
+    }
+
+    showQuestion();
+
+    // Enregistrement du service worker
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  </script>
+</body>
+</html>
